@@ -26,11 +26,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-
 import os
-# os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+# os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 from scipy import misc
 import sys
@@ -102,7 +101,7 @@ def main(args):
                         img = img[:, :, 0:3]
 
                         bounding_boxes, _ = detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold,
-                                                                          factor)
+                                                                    factor)
                         nrof_faces = bounding_boxes.shape[0]
                         if nrof_faces > 0:
                             det = bounding_boxes[:, 0:4]
