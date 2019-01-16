@@ -150,17 +150,17 @@ def parse_arguments(argv):
 
     parser.add_argument('--lfw_dir', type=str,
                         help='Path to the data directory containing aligned LFW face patches.',
-                        default="/Users/eric/Documents/01_DEV/02_ArchTest/TestData/lfw_mtcnnpy_160")
+                        default="/Users/eric/Documents/01_DEV/01_BD/datasets/lfw/lfw_mtcnnpy_160")
     parser.add_argument('--lfw_batch_size', type=int,
                         help='Number of images to process in a batch in the LFW test set.', default=100)
     parser.add_argument('--model', type=str,
                         help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file',
-                        default='/Users/eric/Documents/01_DEV/02_ArchTest/Facenet/models/20180402-114759')
+                        default='/Users/eric/Documents/01_DEV/01_BD/datasets/models/20180402-114759')
     parser.add_argument('--image_size', type=int,
                         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--lfw_pairs', type=str,
                         help='The file containing the pairs to use for validation.',
-                        default='/Users/eric/Documents/01_DEV/02_ArchTest/TestData/pairs.txt')
+                        default='/Users/eric/Documents/01_DEV/01_BD/datasets/lfw/data/pairs.txt')
     parser.add_argument('--lfw_nrof_folds', type=int,
                         help='Number of folds to use for cross validation. Mainly used for testing.', default=10)
     parser.add_argument('--distance_metric', type=int,

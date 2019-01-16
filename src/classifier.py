@@ -36,7 +36,7 @@ import math
 import pickle
 from sklearn.svm import SVC
 
-
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 def main(args):
     with tf.Graph().as_default():
 

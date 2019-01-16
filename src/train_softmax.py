@@ -43,7 +43,7 @@ import tensorflow.contrib.slim as slim
 from tensorflow.python.ops import data_flow_ops
 from tensorflow.python.framework import ops
 from tensorflow.python.ops import array_ops
-
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 def main(args):
     network = importlib.import_module(args.model_def)
@@ -191,8 +191,9 @@ def main(args):
         summary_op = tf.summary.merge_all()
 
         # Start running operations on the Graph.
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=args.gpu_memory_fraction)
-        sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+        # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=args.gpu_memory_fraction)
+        # sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+        sess=tf.Session()
         sess.run(tf.global_variables_initializer())
         sess.run(tf.local_variables_initializer())
         summary_writer = tf.summary.FileWriter(log_dir, sess.graph)
@@ -519,16 +520,16 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--logs_base_dir', type=str,
-                        help='Directory where to write event logs.', default='~/logs/facenet')
+                        help='Directory where to write event logs.', default='/Users/eric/Documents/01_DEV/01_BD/datasets/log')
     parser.add_argument('--models_base_dir', type=str,
-                        help='Directory where to write trained models and checkpoints.', default='~/models/facenet')
-    parser.add_argument('--gpu_memory_fraction', type=float,
-                        help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
+                        help='Directory where to write trained models and checkpoints.', default='/Users/eric/Documents/01_DEV/01_BD/datasets/models/20190115')
+    # parser.add_argument('--gpu_memory_fraction', type=float,
+    #                     help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
     parser.add_argument('--pretrained_model', type=str,
                         help='Load a pretrained model before training starts.')
     parser.add_argument('--data_dir', type=str,
                         help='Path to the data directory containing aligned face patches.',
-                        default='~/datasets/casia/casia_maxpy_mtcnnalign_182_160')
+                        default='/Users/eric/Documents/01_DEV/01_BD/datasets/lfw/lfw_mtcnnpy_182')
     parser.add_argument('--model_def', type=str,
                         help='Model definition. Points to a module containing the definition of the inference graph.',
                         default='models.inception_resnet_v1')
@@ -585,7 +586,7 @@ def parse_arguments(argv):
                         help='Enables logging of weight/bias histograms in tensorboard.', action='store_true')
     parser.add_argument('--learning_rate_schedule_file', type=str,
                         help='File containing the learning rate schedule that is used when learning_rate is set to to -1.',
-                        default='data/learning_rate_schedule.txt')
+                        default='/Users/eric/Documents/01_DEV/01_BD/Facent/data/learning_rate_schedule_classifier_vggface2.txt')
     parser.add_argument('--filter_filename', type=str,
                         help='File containing image data used for dataset filtering', default='')
     parser.add_argument('--filter_percentile', type=float,
