@@ -227,7 +227,7 @@ def main(args):
                 'time_train': np.zeros((args.max_nrof_epochs,), np.float32),
                 'time_validate': np.zeros((args.max_nrof_epochs,), np.float32),
                 'time_evaluate': np.zeros((args.max_nrof_epochs,), np.float32),
-                'prelogits_hist': np.zeros((args.max_nrof_epochs, 1000), np.float32),
+                'prelogits_hist': np.zeros((args.max_nrof_epochs, 400), np.float32),
             }
             for epoch in range(1, args.max_nrof_epochs + 1):
                 step = sess.run(global_step, feed_dict=None)
@@ -273,7 +273,7 @@ def main(args):
 
                 print('Saving statistics')
                 with h5py.File(stat_file_name, 'w') as f:
-                    for key, value in stat.iteritems():
+                    for key, value in stat.items():
                         f.create_dataset(key, data=value)
 
     return model_dir
@@ -366,7 +366,7 @@ def train(args, sess, epoch, image_list, label_list, index_dequeue_op, enqueue_o
         stat['learning_rate'][epoch - 1] = lr_
         stat['accuracy'][step_ - 1] = accuracy_
         stat['prelogits_hist'][epoch - 1, :] += \
-        np.histogram(np.minimum(np.abs(prelogits_), prelogits_hist_max), bins=1000, range=(0.0, prelogits_hist_max))[0]
+        np.histogram(np.minimum(np.abs(prelogits_), prelogits_hist_max), bins=400, range=(0.0, prelogits_hist_max))[0]
 
         duration = time.time() - start_time
         print(
@@ -520,27 +520,38 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--logs_base_dir', type=str,
-                        help='Directory where to write event logs.', default='/Users/eric/Documents/01_DEV/01_BD/datasets/log')
+                        help='Directory where to write event logs.', default='/Users/wanghx/Documents/01_DEV/10_2019/datasets/lfw/log')
     parser.add_argument('--models_base_dir', type=str,
-                        help='Directory where to write trained models and checkpoints.', default='/Users/eric/Documents/01_DEV/01_BD/datasets/models/20190115')
-    # parser.add_argument('--gpu_memory_fraction', type=float,
-    #                     help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
-    parser.add_argument('--pretrained_model', type=str,
-                        help='Load a pretrained model before training starts.')
+                        help='Directory where to write trained models and checkpoints.', default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/models/20190115')
     parser.add_argument('--data_dir', type=str,
                         help='Path to the data directory containing aligned face patches.',
-                        default='/Users/eric/Documents/01_DEV/01_BD/datasets/lfw/lfw_mtcnnpy_182')
+                        default='/Users/wanghx/Documents/01_DEV/10_2019/datasets/lfw/lfw_mtcnnpy_182')
+    parser.add_argument('--learning_rate_schedule_file', type=str,
+                        help='File containing the learning rate schedule that is used when learning_rate is set to to -1.',
+                        default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/data/learning_rate_schedule_classifier_vggface2.txt')
+    parser.add_argument('--lfw_pairs', type=str,
+                        help='The file containing the pairs to use for validation.', default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/data/pairs.txt')
+
+
+    # parser.add_argument('--gpu_memory_fraction', type=float,
+    #                     help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
+
+
+
+    parser.add_argument('--pretrained_model', type=str,
+                        help='Load a pretrained model before training starts.')
+
     parser.add_argument('--model_def', type=str,
                         help='Model definition. Points to a module containing the definition of the inference graph.',
                         default='models.inception_resnet_v1')
     parser.add_argument('--max_nrof_epochs', type=int,
-                        help='Number of epochs to run.', default=500)
+                        help='Number of epochs to run.', default=40)
     parser.add_argument('--batch_size', type=int,
                         help='Number of images to process in a batch.', default=90)
     parser.add_argument('--image_size', type=int,
                         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--epoch_size', type=int,
-                        help='Number of batches per epoch.', default=1000)
+                        help='Number of batches per epoch.', default=100)
     parser.add_argument('--embedding_size', type=int,
                         help='Dimensionality of the embedding.', default=128)
     parser.add_argument('--random_crop',
@@ -568,10 +579,10 @@ def parse_arguments(argv):
     parser.add_argument('--prelogits_hist_max', type=float,
                         help='The max value for the prelogits histogram.', default=10.0)
     parser.add_argument('--optimizer', type=str, choices=['ADAGRAD', 'ADADELTA', 'ADAM', 'RMSPROP', 'MOM'],
-                        help='The optimization algorithm to use', default='ADAGRAD')
+                        help='The optimization algorithm to use', default='ADADELTA')
     parser.add_argument('--learning_rate', type=float,
                         help='Initial learning rate. If set to a negative value a learning rate ' +
-                             'schedule can be specified in the file "learning_rate_schedule.txt"', default=0.1)
+                             'schedule can be specified in the file "learning_rate_schedule.txt"', default=0.05)
     parser.add_argument('--learning_rate_decay_epochs', type=int,
                         help='Number of epochs between learning rate decay.', default=100)
     parser.add_argument('--learning_rate_decay_factor', type=float,
@@ -584,9 +595,6 @@ def parse_arguments(argv):
                         help='Number of preprocessing (data loading and augmentation) threads.', default=4)
     parser.add_argument('--log_histograms',
                         help='Enables logging of weight/bias histograms in tensorboard.', action='store_true')
-    parser.add_argument('--learning_rate_schedule_file', type=str,
-                        help='File containing the learning rate schedule that is used when learning_rate is set to to -1.',
-                        default='/Users/eric/Documents/01_DEV/01_BD/Facent/data/learning_rate_schedule_classifier_vggface2.txt')
     parser.add_argument('--filter_filename', type=str,
                         help='File containing image data used for dataset filtering', default='')
     parser.add_argument('--filter_percentile', type=float,
@@ -601,12 +609,10 @@ def parse_arguments(argv):
                         help='Classes with fewer images will be removed from the validation set', default=0)
 
     # Parameters for validation on LFW
-    parser.add_argument('--lfw_pairs', type=str,
-                        help='The file containing the pairs to use for validation.', default='data/pairs.txt')
     parser.add_argument('--lfw_dir', type=str,
                         help='Path to the data directory containing aligned face patches.', default='')
     parser.add_argument('--lfw_batch_size', type=int,
-                        help='Number of images to process in a batch in the LFW test set.', default=100)
+                        help='Number of images to process in a batch in the LFW test set.', default=1000)
     parser.add_argument('--lfw_nrof_folds', type=int,
                         help='Number of folds to use for cross validation. Mainly used for testing.', default=10)
     parser.add_argument('--lfw_distance_metric', type=int,
