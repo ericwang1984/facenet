@@ -26,6 +26,8 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from pathlib import PurePosixPath
+
 
 import os
 from subprocess import Popen, PIPE
@@ -82,9 +84,12 @@ def center_loss(features, label, alfa, nrof_classes):
 def get_image_paths_and_labels(dataset):
     image_paths_flat = []
     labels_flat = []
+
     for i in range(len(dataset)):
-        image_paths_flat += dataset[i].image_paths
-        labels_flat += [i] * len(dataset[i].image_paths)
+        suf = PurePosixPath(dataset[i].image_paths).suffix
+        if suf == '.png':
+            image_paths_flat += dataset[i].image_paths
+            labels_flat += [i] * len(dataset[i].image_paths)
     return image_paths_flat, labels_flat
 
 

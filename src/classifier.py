@@ -135,25 +135,59 @@ def split_dataset(dataset, min_nrof_images_per_class, nrof_train_images_per_clas
     return train_set, test_set
 
 
+# def parse_arguments(argv):
+#     parser = argparse.ArgumentParser()
+#
+#     parser.add_argument('--mode', type=str, choices=['TRAIN', 'CLASSIFY'],
+#                         help='Indicates if a new classifier should be trained or a classification ' +
+#                              'model should be used for classification', default='TRAIN')
+#     parser.add_argument('--data_dir', type=str,
+#                         help='Path to the data directory containing aligned LFW face patches.',default='/Users/wanghx/Documents/01_DEV/10_2019/datasets/lfw/my160/')
+#     parser.add_argument('--model', type=str,
+#                         help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file',default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/models/20180402-114759/20180402-114759.pb')
+#     parser.add_argument('--classifier_filename',
+#                         help='Classifier model file name as a pickle (.pkl) file. ' +
+#                              'For training this is the output and for classification this is an input.',default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/models/my_classifier.pkl')
+#     parser.add_argument('--use_split_dataset',
+#                         help='Indicates that the dataset specified by data_dir should be split into a training and test set. ' +
+#                              'Otherwise a separate test set can be specified using the test_data_dir option.',
+#                         action='store_true')
+#     parser.add_argument('--test_data_dir', type=str,
+#                         help='Path to the test data directory containing aligned images used for testing.')
+#     parser.add_argument('--batch_size', type=int,
+#                         help='Number of images to process in a batch.', default=90)
+#     parser.add_argument('--image_size', type=int,
+#                         help='Image size (height, width) in pixels.', default=160)
+#     parser.add_argument('--seed', type=int,
+#                         help='Random seed.', default=666)
+#     parser.add_argument('--min_nrof_images_per_class', type=int,
+#                         help='Only include classes with at least this number of images in the dataset', default=20)
+#     parser.add_argument('--nrof_train_images_per_class', type=int,
+#                         help='Use this number of images from each class for training and the rest for testing',
+#                         default=10)
+#
+#     return parser.parse_args(argv)
+
+
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('mode', type=str, choices=['TRAIN', 'CLASSIFY'],
+    parser.add_argument('--mode', type=str, choices=['TRAIN', 'CLASSIFY'],
                         help='Indicates if a new classifier should be trained or a classification ' +
                              'model should be used for classification', default='CLASSIFY')
-    parser.add_argument('data_dir', type=str,
-                        help='Path to the data directory containing aligned LFW face patches.')
-    parser.add_argument('model', type=str,
-                        help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
-    parser.add_argument('classifier_filename',
+    parser.add_argument('--data_dir', type=str,
+                        help='Path to the data directory containing aligned LFW face patches.',default='/Users/wanghx/Documents/01_DEV/10_2019/datasets/lfw/myTest160/')
+    parser.add_argument('--model', type=str,
+                        help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file',default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/models/20180402-114759/20180402-114759.pb')
+    parser.add_argument('--classifier_filename',
                         help='Classifier model file name as a pickle (.pkl) file. ' +
-                             'For training this is the output and for classification this is an input.')
+                             'For training this is the output and for classification this is an input.',default='/Users/wanghx/Documents/01_DEV/10_2019/facenet/models/my_classifier.pkl')
     parser.add_argument('--use_split_dataset',
                         help='Indicates that the dataset specified by data_dir should be split into a training and test set. ' +
                              'Otherwise a separate test set can be specified using the test_data_dir option.',
                         action='store_true')
     parser.add_argument('--test_data_dir', type=str,
-                        help='Path to the test data directory containing aligned images used for testing.')
+                        help='Path to the test data directory containing aligned images used for testing.',default='/Users/wanghx/Documents/01_DEV/10_2019/datasets/lfw/myTest160/')
     parser.add_argument('--batch_size', type=int,
                         help='Number of images to process in a batch.', default=90)
     parser.add_argument('--image_size', type=int,
