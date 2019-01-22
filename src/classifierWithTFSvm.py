@@ -94,7 +94,8 @@ def main(args):
                 model = SVC(kernel='linear', probability=True)
                 model.fit(emb_array, labels)
 
-
+                #TODO
+                tf.estimator.DNNClassifier
 
 
                 # Create a list of class names
