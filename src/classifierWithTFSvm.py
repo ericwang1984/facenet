@@ -35,7 +35,6 @@ import sys
 import math
 import pickle
 from sklearn.svm import SVC
-
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 def main(args):
     with tf.Graph().as_default():
@@ -94,6 +93,9 @@ def main(args):
                 print('Training classifier')
                 model = SVC(kernel='linear', probability=True)
                 model.fit(emb_array, labels)
+
+
+
 
                 # Create a list of class names
                 class_names = [cls.name.replace('_', ' ') for cls in dataset]
