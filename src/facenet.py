@@ -28,7 +28,7 @@ from __future__ import division
 from __future__ import print_function
 from pathlib import PurePosixPath
 
-
+import glob
 import os
 from subprocess import Popen, PIPE
 import tensorflow as tf
@@ -86,10 +86,8 @@ def get_image_paths_and_labels(dataset):
     labels_flat = []
 
     for i in range(len(dataset)):
-        suf = PurePosixPath(dataset[i].image_paths).suffix
-        if suf == '.png':
-            image_paths_flat += dataset[i].image_paths
-            labels_flat += [i] * len(dataset[i].image_paths)
+        image_paths_flat += dataset[i].image_paths
+        labels_flat += [i] * len(dataset[i].image_paths)
     return image_paths_flat, labels_flat
 
 
@@ -359,13 +357,21 @@ def get_dataset(path, has_class_directories=True):
     return dataset
 
 
+# def get_image_paths(facedir):
+#     image_paths = []
+#     if os.path.isdir(facedir):
+#         images = os.listdir(facedir)
+#         image_paths = [os.path.join(facedir, img) for img in images]
+#     return image_paths
+
+
+
 def get_image_paths(facedir):
     image_paths = []
     if os.path.isdir(facedir):
         images = os.listdir(facedir)
-        image_paths = [os.path.join(facedir, img) for img in images]
+        image_paths = glob.glob(facedir+'/*.png', recursive=True)
     return image_paths
-
 
 def split_dataset(dataset, split_ratio, min_nrof_images_per_class, mode):
     if mode == 'SPLIT_CLASSES':
