@@ -3,6 +3,9 @@ import align.detect_face as detect_face
 import os
 from tensorflow.python.framework.graph_util import convert_variables_to_constants
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+
 # tf.InteractiveSession()让自己成为默认的session，用户不需指明哪个session运行情况下就可运行起来
 # tf.InteractiveSession()来构建会话时，可以先构建一个session然后再定义操作
 # 使用tf.Session()来构建会话，需要在会话构建之前定义好全部的操作（operation）然后再构建会话
